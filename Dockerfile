@@ -4,6 +4,7 @@ RUN apk add --no-cache \
         bash \
         ruby \
         ruby-json \
+        ruby-dev \
         curl \
         ca-certificates \
         openssl \
@@ -12,6 +13,7 @@ RUN apk add --no-cache \
         python \
         py-pip \
         py-setuptools \
+        jq \
         && \
     pip --no-cache-dir install \
         awscli \
@@ -25,7 +27,11 @@ RUN apk add --no-cache \
     gem install terraform_landscape --no-rdoc --no-ri && \
     curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > /tmp/get_helm.sh && \
     chmod +x /tmp/get_helm.sh && \
-    /tmp/get_helm.sh
+    /tmp/get_helm.sh && \
+    curl -LO kops https://github.com/kubernetes/kops/releases/download/1.11.0/kops-linux-amd64  > /tmp/kops && \
+    chmod +x /tmp/kops && \
+    mv /tmp/kops /usr/local/bin/kops && \
+    rm -fr /tmp/*
 
 # we want to be able to run non-terraform commands so we remove the entrypoint
 ENTRYPOINT [""]
