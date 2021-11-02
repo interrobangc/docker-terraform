@@ -30,4 +30,4 @@ shell:
 	docker run -it --rm --name $(IMAGE_BASE)-$(IMAGE) $(IMAGE_BASE)/$(IMAGE) bash
 
 shell-tag:
-	docker run -it --rm --name $(IMAGE_BASE)-$(IMAGE):${TAG} $(IMAGE_BASE)/$(IMAGE) bash
+	docker run -it --rm --name $(IMAGE_BASE)-$(IMAGE) $(IMAGE_BASE)/$(IMAGE):${TAG} bash
