@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.14.8
+FROM hashicorp/terraform:1.0.8
 RUN apk add --no-cache \
     bash \
     ruby \
@@ -20,7 +20,7 @@ RUN apk add --no-cache \
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl && \
-    curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator && \
+    curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator && \
     chmod +x aws-iam-authenticator && \
     mv aws-iam-authenticator /usr/local/bin/aws-iam-authenticator && \
     gem install terraform_landscape --no-document && \
@@ -28,7 +28,7 @@ RUN apk add --no-cache \
     chmod +x /tmp/get_helm.sh && \
     /tmp/get_helm.sh && \
     echo "helm istalled" && \
-    curl -LO https://github.com/kubernetes/kops/releases/download/1.18.0/kops-linux-amd64 && \
+    curl -LO https://github.com/kubernetes/kops/releases/download/1.21.0/kops-linux-amd64 && \
     chmod +x kops-linux-amd64 && \
     mv kops-linux-amd64 /usr/local/bin/kops && \
     rm -fr /tmp/*
