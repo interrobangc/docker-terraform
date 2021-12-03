@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:1.0.8
+FROM hashicorp/terraform:1.0.10
 RUN apk add --no-cache \
     bash \
     ruby \
