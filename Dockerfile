@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:1.0.10
+FROM hashicorp/terraform:1.2.2
 RUN apk add --no-cache \
     bash \
     ruby \
@@ -28,7 +28,7 @@ RUN apk add --no-cache \
     chmod +x /tmp/get_helm.sh && \
     /tmp/get_helm.sh && \
     echo "helm istalled" && \
-    curl -LO https://github.com/kubernetes/kops/releases/download/1.21.0/kops-linux-amd64 && \
+    curl -LO https://github.com/kubernetes/kops/releases/download/1.22.0/kops-linux-amd64 && \
     chmod +x kops-linux-amd64 && \
     mv kops-linux-amd64 /usr/local/bin/kops && \
     rm -fr /tmp/*
