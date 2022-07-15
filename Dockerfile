@@ -1,4 +1,8 @@
 FROM hashicorp/terraform:1.0.10
+
+ENV KUBCTL_VERSION="v1.23.6"
+ENV HELM_VERSION="v3.8.2"
+
 RUN apk add --no-cache \
     bash \
     ruby \
@@ -17,7 +21,7 @@ RUN apk add --no-cache \
     pip --no-cache-dir install \
     awscli \
     && \
-    curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBCTL_VERSION}/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     mv ./kubectl /usr/local/bin/kubectl && \
     curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator && \
@@ -26,7 +30,7 @@ RUN apk add --no-cache \
     gem install terraform_landscape --no-document && \
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > /tmp/get_helm.sh && \
     chmod +x /tmp/get_helm.sh && \
-    /tmp/get_helm.sh && \
+    DESIRED_VERSION=$HELM_VERSION /tmp/get_helm.sh && \
     echo "helm istalled" && \
     curl -LO https://github.com/kubernetes/kops/releases/download/1.21.0/kops-linux-amd64 && \
     chmod +x kops-linux-amd64 && \
