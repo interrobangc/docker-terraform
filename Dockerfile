@@ -1,4 +1,7 @@
 FROM hashicorp/terraform:1.3.0
+
+ADD https://github.com/gruntwork-io/terragrunt/releases/download/v0.40.2/terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
 RUN apk add --no-cache \
     bash \
     ruby \
@@ -9,6 +12,8 @@ RUN apk add --no-cache \
     openssl \
     gettext \
     apache2-utils \
+    nodejs \
+    npm \
     python3 \
     py-pip \
     py-setuptools \
@@ -31,6 +36,7 @@ RUN apk add --no-cache \
     curl -LO https://github.com/kubernetes/kops/releases/download/1.22.0/kops-linux-amd64 && \
     chmod +x kops-linux-amd64 && \
     mv kops-linux-amd64 /usr/local/bin/kops && \
+    chmod +x /usr/local/bin/terragrunt && \
     rm -fr /tmp/*
 
 # we want to be able to run non-terraform commands so we remove the entrypoint
