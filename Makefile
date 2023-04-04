@@ -4,27 +4,28 @@ IMAGE_BASE = interrobangc
 IMAGE      = terraform
 MY_PWD     = $(shell pwd)
 
-all: build run
+ifeq ($(TAG),)
+  TAG = $(shell cat tf-version.lock)
+endif
 
-build:
-	tag="$(TAG)"; \
-	on_master=$$(git branch | grep \* | cut -d ' ' -f2 | grep master; echo $$?;); \
-	if [ "$${tag-}" ]; then \
-		docker build -t $(IMAGE_BASE)/$(IMAGE):$(TAG) -f $(MY_PWD)/Dockerfile $(MY_PWD); \
-	elif [ "$$on_master" = "1" ]; then \
-		read -n 1 -s -r -p "You are not on the master branch and did not provied a TAG={some tag} argument. Are you sure you want to build latest? Press any key to continue, ctrl+c to exit."; \
-		docker build -t $(IMAGE_BASE)/$(IMAGE) -f $(MY_PWD)/Dockerfile $(MY_PWD); \
-	fi;
+PLATFORMS  = linux/amd64,linux/arm64
 
-push:
-	tag="$(TAG)"; \
-	on_master=$$(git branch | grep \* | cut -d ' ' -f2 | grep master; echo $$?;); \
-	if [ "$${tag-}" ]; then \
-		docker image push $(IMAGE_BASE)/$(IMAGE):$(TAG); \
-	elif [ "$$on_master" = "1" ]; then \
-		read -n 1 -s -r -p "You are not on the master branch and did not provied a TAG={some tag} argument. Are you sure you want to push latest? Press any key to continue, ctrl+c to exit."; \
-		docker image push $(IMAGE_BASE)/$(IMAGE); \
-	fi;
+BUILD_ARGS = --build-arg TERRAFORM_VERSION=$(TAG)
+PLATFORM_ARG = --platform $(PLATFORMS)
+IMAGE_AND_TAG = $(IMAGE_BASE)/$(IMAGE):$(TAG)
+
+buildx-use:
+	-docker buildx create --use
+
+build: buildx-use build-local
+
+build-local:
+	docker buildx build --load $(BUILD_ARGS) -t $(IMAGE_AND_TAG) .
+
+push: buildx-use build-and-push
+
+build-and-push:
+	docker buildx build --push $(PLATFORM_ARG) $(BUILD_ARGS) -t $(IMAGE_AND_TAG) .
 
 shell:
 	docker run -it --rm --name $(IMAGE_BASE)-$(IMAGE) $(IMAGE_BASE)/$(IMAGE) bash
